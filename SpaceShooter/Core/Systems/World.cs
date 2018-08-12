@@ -3,17 +3,21 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceShooter.Core.Entities;
+using SpaceShooter.Core.Events;
 
-namespace SpaceShooter.Core {
+namespace SpaceShooter.Core.Systems {
 	internal sealed class World {
 		private readonly List<Entity> newEntities = new List<Entity>();
 		private readonly List<Entity> entities = new List<Entity>();
 
 		public IReadOnlyCollection<Entity> Entities => entities;
 
-		public void Add(Entity entity) {
-			entity.World = this;
-			newEntities.Add(entity);
+		public World() {
+			EventBroker.Register<SpawnEvent>(Spawn);
+		}
+
+		private void Spawn(SpawnEvent e) {
+			newEntities.Add(e.Entity);
 		}
 
 		public void Update(GameTime gameTime) {
@@ -37,7 +41,7 @@ namespace SpaceShooter.Core {
 				entity.Update(gameTime);
 			}
 			// remove destroyed entities
-			entities.RemoveAll(e => e.IsDestroyed);
+			entities.RemoveAll(e => e.IsDestroyed || e.IsOutOfBounds());
 		}
 
 		public void Draw(SpriteBatch spriteBatch) {

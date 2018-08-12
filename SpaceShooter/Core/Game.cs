@@ -1,20 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Animations.SpriteSheets;
-using MonoGame.Extended.TextureAtlases;
-using SpaceShooter.Core.Entities;
+using SpaceShooter.Core.Screens;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core {
 	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
-	public class Game : Microsoft.Xna.Framework.Game {
-		public SpriteBatch SpriteBatch { get; private set; }
-		private Camera camera;
-		private World world = new World();
+	internal class Game : Microsoft.Xna.Framework.Game {
+		public static Game Instance { get; private set; }
+		private readonly Stack<Screen> screens = new Stack<Screen>();
 
 		public Game() {
 			var graphics = new GraphicsDeviceManager(this) {
@@ -23,18 +18,20 @@ namespace SpaceShooter.Core {
 			};
 			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
+			Instance = this;
 		}
 
-		protected override void Initialize() {
-			base.Initialize();
+		public void PushScreen(Screen screen) {
+			screens.Push(screen);
+		}
+
+		public void PopScreen() {
+			screens.Pop();
 		}
 
 		protected override void LoadContent() {
 			Assets.Load(GraphicsDevice, Content);
-			SpriteBatch = new SpriteBatch(GraphicsDevice);
-			camera = new Camera(GraphicsDevice);
-			world.Add(new EnemyShip());
-			world.Add(new PlayerShip());
+			PushScreen(new GameScreen());
 		}
 
 		protected override void UnloadContent() {
@@ -42,14 +39,12 @@ namespace SpaceShooter.Core {
 		}
 
 		protected override void Update(GameTime gameTime) {
-			world.Update(gameTime);
+			screens.Peek().Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime) {
 			GraphicsDevice.Clear(Color.CornflowerBlue);
-			SpriteBatch.Begin(transformMatrix: camera.Transform);
-			world.Draw(SpriteBatch);
-			SpriteBatch.End();
+			screens.Peek().Draw();
 		}
 	}
 }

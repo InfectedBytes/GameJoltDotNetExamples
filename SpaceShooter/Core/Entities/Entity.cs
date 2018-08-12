@@ -7,8 +7,6 @@ using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Entities {
 	internal abstract class Entity {
-		public World World { get; internal set; }
-
 		public Team Team { get; }
 		public TextureRegion2D Region { get; set; }
 		public SpriteEffects Effects { get; set; }
@@ -44,6 +42,12 @@ namespace SpaceShooter.Core.Entities {
 
 		public virtual void Destroy() {
 			IsDestroyed = true;
+		}
+
+		public bool IsOutOfBounds() {
+			var w = Assets.GraphicsDevice.Viewport.Width * 0.75f;
+			var h = Assets.GraphicsDevice.Viewport.Height * 0.75f;
+			return Position.X < -w || Position.X > w || Position.Y < -h || Position.Y > h;
 		}
 	}
 }

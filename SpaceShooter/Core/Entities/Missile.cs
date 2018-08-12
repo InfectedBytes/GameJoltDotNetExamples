@@ -1,16 +1,15 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceShooter.Core.Events;
 
 namespace SpaceShooter.Core.Entities {
 	internal sealed class Missile : Entity {
-		private const float Speed = 350f;
+		private const float Speed = 500f;
 		private readonly MissileDef missileDef;
-		private readonly Team team;
 
-		public Missile(MissileDef missileDef, Team team) {
+		public Missile(MissileDef missileDef, Team team) : base(team) {
 			this.missileDef = missileDef;
-			this.team = team;
 			Region = missileDef.Texture;
 			switch(team) {
 				case Team.Player:
@@ -26,10 +25,16 @@ namespace SpaceShooter.Core.Entities {
 		}
 
 		public override void OnCollide(Entity other) {
-			if(team != other.Team && other is Ship ship) {
-				ship.Damage(missileDef.Damage);
-				World.Add(new Explosion {Position = Position});
-				Destroy();
+			if(Team != other.Team) {
+				if(other is Ship ship) {
+					ship.Damage(Team, missileDef.Damage);
+					EventBroker.Dispatch(new SpawnEvent(new Explosion(), Position));
+					Destroy();
+				} else if(other is Missile missile) {
+					Destroy();
+					missile.Destroy();
+					EventBroker.Dispatch(new SpawnEvent(new Explosion(), Position));
+				}
 			}
 		}
 	}

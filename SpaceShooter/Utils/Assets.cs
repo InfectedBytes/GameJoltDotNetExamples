@@ -14,6 +14,7 @@ namespace SpaceShooter.Utils {
 		public static TextureAtlas Sprites { get; private set; }
 
 		public static MissileDef DefaultMissile => new MissileDef("spaceMissiles_001", 1, 0.5f);
+		public static MissileDef DefaultEnemyMissile => new MissileDef("spaceMissiles_002", 1, 2f);
 
 		public static void Load(GraphicsDevice device, ContentManager content) {
 			GraphicsDevice = device;
