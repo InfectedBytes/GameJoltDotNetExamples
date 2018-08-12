@@ -42,14 +42,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Core\EnemyShip.cs" />
-    <Compile Include="Core\Entity.cs" />
-    <Compile Include="Core\Missile.cs" />
-    <Compile Include="Core\PlayerShip.cs" />
-    <Compile Include="Core\Explosion.cs" />
+    <Compile Include="Core\Entities\EnemyShip.cs" />
+    <Compile Include="Core\Entities\Entity.cs" />
+    <Compile Include="Core\Entities\Missile.cs" />
+    <Compile Include="Core\Entities\PlayerShip.cs" />
+    <Compile Include="Core\Entities\Explosion.cs" />
     <Compile Include="Core\Game.cs" />
-    <Compile Include="Core\Ship.cs" />
+    <Compile Include="Core\Entities\Ship.cs" />
     <Compile Include="Core\Team.cs" />
+    <Compile Include="Core\MissileDef.cs" />
     <Compile Include="Core\World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

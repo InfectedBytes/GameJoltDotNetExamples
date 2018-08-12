@@ -1,15 +1,14 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceShooter.Utils;
 
-namespace SpaceShooter.Core {
+namespace SpaceShooter.Core.Entities {
 	internal sealed class PlayerShip : Ship {
 		private const float MaxSpeed = 250f;
 		private readonly Rectangle bounds;
 
-		public PlayerShip() : base(Team.Player) {
+		public PlayerShip() : base(20, Assets.DefaultMissile, Team.Player) {
 			Region = Assets.Sprites["spaceShips_001"];
 			var w = Assets.GraphicsDevice.Viewport.Width;
 			var h = Assets.GraphicsDevice.Viewport.Height;
@@ -36,7 +35,7 @@ namespace SpaceShooter.Core {
 
 			// shoot
 			if(keyboard.IsKeyDown(Keys.Space))
-				World.Add(new Missile(Team.Player) {Position = Position});
+				Fire();
 		}
 	}
 }

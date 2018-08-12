@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Animations.SpriteSheets;
 using MonoGame.Extended.TextureAtlases;
+using SpaceShooter.Core.Entities;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core {
@@ -32,10 +33,8 @@ namespace SpaceShooter.Core {
 			Assets.Load(GraphicsDevice, Content);
 			SpriteBatch = new SpriteBatch(GraphicsDevice);
 			camera = new Camera(GraphicsDevice);
-			world.Add(new Explosion());
 			world.Add(new EnemyShip());
 			world.Add(new PlayerShip());
-			world.Add(new Missile(Team.Player) {Position = new Vector2(0,-50)});
 		}
 
 		protected override void UnloadContent() {

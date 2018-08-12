@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceShooter.Core.Entities;
 
 namespace SpaceShooter.Core {
 	internal sealed class World {
@@ -24,10 +25,11 @@ namespace SpaceShooter.Core {
 				var entity = entities[i];
 				for(int j = i + 1; j < entities.Count; j++) {
 					var other = entities[j];
-					if(entity.Team != other.Team) {
+					if(entity.Team != other.Team && entity.Overlaps(other)) {
 						entity.OnCollide(other);
 						other.OnCollide(entity);
 					}
+					if(entity.IsDestroyed) break;
 				}
 			}
 			// update all entities that are still alive

@@ -2,7 +2,7 @@
 using MonoGame.Extended.Animations.SpriteSheets;
 using SpaceShooter.Utils;
 
-namespace SpaceShooter.Core {
+namespace SpaceShooter.Core.Entities {
 	internal sealed class Explosion : Entity {
 		private readonly SpriteSheetAnimation animation;
 

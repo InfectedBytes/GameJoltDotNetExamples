@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using SpaceShooter.Utils;
 
-namespace SpaceShooter.Core {
+namespace SpaceShooter.Core.Entities {
 	internal abstract class Entity {
 		public World World { get; internal set; }
 
@@ -31,9 +32,17 @@ namespace SpaceShooter.Core {
 			spriteBatch.Draw(Region, Position, Rotation, Region.Size / 2f, Effects);
 		}
 
+		public bool Overlaps(Entity other) {
+			if(Region == null || other.Region == null) return false;
+			float dx = Position.X - other.Position.X;
+			float dy = Position.Y - other.Position.Y;
+			return Math.Abs(dx) < (Region.Width + other.Region.Width) / 2f
+			       && Math.Abs(dy) < (Region.Height + other.Region.Height) / 2f;
+		}
+
 		public virtual void OnCollide(Entity other) { }
 
-		public void Destroy() {
+		public virtual void Destroy() {
 			IsDestroyed = true;
 		}
 	}
