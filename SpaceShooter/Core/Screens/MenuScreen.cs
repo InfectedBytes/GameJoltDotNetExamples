@@ -10,6 +10,7 @@ namespace SpaceShooter.Core.Screens {
 		private readonly SimpleButton exit = new SimpleButton(Assets.FontMedium, "Exit", new Point(0, 40), new Point(300, 60), OnClickExit);
 
 		private readonly List<Label> scores = new List<Label>();
+		private readonly List<Label> trophies = new List<Label>();
 		private readonly List<Label> friends = new List<Label>();
 
 		public MenuScreen() {
@@ -39,6 +40,16 @@ namespace SpaceShooter.Core.Screens {
 					scores.Add(new Label($"{score.UserName}: {score.Text}", scorePos));
 				}
 			});
+			var trophyPos = new Vector2(0, -300);
+			trophies.Clear();
+			trophies.Add(new Label(".:Unlocked Trophies:.", trophyPos));
+			Game.Jolt.Trophies.Fetch(Game.User, true, callback: response => {
+				if(!response.Success) return;
+				foreach(var trophy in response.Data) {
+					trophyPos.Y += 40;
+					trophies.Add(new Label($"{trophy.Title} ({trophy.Difficulty})", trophyPos));
+				}
+			});
 		}
 
 		public override void Draw(GameTime gameTime) {
@@ -46,12 +57,12 @@ namespace SpaceShooter.Core.Screens {
 			SpriteBatch.Begin(transformMatrix: Camera.Transform);
 			play.Draw(SpriteBatch);
 			exit.Draw(SpriteBatch);
-			foreach(var score in scores) {
+			foreach(var score in scores)
 				score.Draw(SpriteBatch);
-			}
-			foreach(var friend in friends) {
+			foreach(var trophy in trophies)
+				trophy.Draw(SpriteBatch);
+			foreach(var friend in friends)
 				friend.Draw(SpriteBatch);
-			}
 			SpriteBatch.Draw(cursor, Input.MousePos, MathHelper.ToRadians(-30));
 			SpriteBatch.End();
 		}

@@ -18,6 +18,9 @@ namespace SpaceShooter.Core.Systems {
 		private readonly Vector2 exitTextPosition;
 		private Score highscore;
 		private bool gameover;
+		private bool hasTrophyAchieved;
+		private int waveCount;
+		private string message;
 
 		public GameController() {
 			EventBroker.Register<ShipDestroyedEvent>(OnDestroyed);
@@ -31,11 +34,21 @@ namespace SpaceShooter.Core.Systems {
 			Game.Jolt.Scores.Fetch(Game.User, callback: response => {
 				if(response.Success) highscore = response.Data.FirstOrDefault();
 			});
+			Game.Jolt.Trophies.Fetch(Game.User, ids: new[] {Game.Settings.FirstBossTrophy}, callback: response => {
+				if(response.Success) hasTrophyAchieved = response.Data.First().Achieved;
+			});
 		}
 
 		private void OnDestroyed(ShipDestroyedEvent e) {
 			if(e.DestroyedBy == Team.Player && e.Ship is EnemyShip enemy) {
 				Points += enemy.MaxHealth; // we just use the max health of the enemy as his "value"
+				if(enemy.ShipId == EnemyController.BossId) {
+					if(waveCount == 0 && !hasTrophyAchieved) {
+						Game.Jolt.Trophies.SetAchieved(Game.User, Game.Settings.FirstBossTrophy);
+						message = "Unlocked trophy!";
+					}
+					waveCount++; // wave finished
+				}
 			} else if(e.Ship is PlayerShip) {
 				gameover = true;
 				Game.Jolt.Scores.Add(Game.User, Points, $"{Points}P");
@@ -49,6 +62,8 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		public override void Draw(SpriteBatch spriteBatch) {
+			if(message != null)
+				spriteBatch.DrawString(Assets.FontSmall, message, new Vector2(0, -Consts.ScreenHeight / 2f), Color.White);
 			var highscoreText = highscore != null ? highscore.Text : "-";
 			spriteBatch.DrawString(Assets.FontSmall,
 $@"Health: {player.Health}

@@ -2,9 +2,10 @@
 	public sealed class Settings {
 		public int GameId { get; set; }
 		public string PrivateKey { get; set; }
+		public int FirstBossTrophy { get; set; }
 
 		public bool IsValid() {
-			return GameId != 0 && !string.IsNullOrEmpty(PrivateKey);
+			return GameId != 0 && !string.IsNullOrEmpty(PrivateKey) && FirstBossTrophy != 0;
 		}
 	}
 }

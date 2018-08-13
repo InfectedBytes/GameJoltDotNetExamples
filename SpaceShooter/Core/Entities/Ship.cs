@@ -6,6 +6,7 @@ using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Entities {
 	internal abstract class Ship : Entity {
+		public int ShipId { get; }
 		public int MaxHealth { get;}
 		public int Health { get; private set; }
 		public float MaxSpeed { get; protected set; } = 250f;
@@ -15,6 +16,7 @@ namespace SpaceShooter.Core.Entities {
 
 		protected Ship(int shipId, int health, MissileDef missileDef, Vector2[] missileSpawns, Team team = Team.None) :
 			base(team) {
+			ShipId = shipId;
 			this.missileSpawns = missileSpawns;
 			Region = Assets.Sprites[$"spaceShips_{shipId:D3}"];
 			MaxHealth = Health = health;

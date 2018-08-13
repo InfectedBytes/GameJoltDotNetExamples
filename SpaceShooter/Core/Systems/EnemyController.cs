@@ -9,6 +9,8 @@ using SpaceShooter.Utils.External;
 
 namespace SpaceShooter.Core.Systems {
 	internal sealed class EnemyController : BaseSystem {
+		public const int BossId = 7;
+
 		private readonly CoroutineRunner runner = new CoroutineRunner();
 		private PlayerShip player;
 		private readonly MissileDef defaultMissile = new MissileDef("spaceMissiles_002", 1, 2f);
@@ -44,7 +46,7 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private EnemyShip SpawnBoss() {
-			var ship = new EnemyShip(7, 7, bossMissile, new Vector2(-25, 35), new Vector2(25, 35));
+			var ship = new EnemyShip(BossId, 7, bossMissile, new Vector2(-25, 35), new Vector2(25, 35));
 			runner.Run(BossBehavior(ship));
 			runner.Run(ConstantFire(ship));
 			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -Consts.ScreenHeight / 2 - 100)));
