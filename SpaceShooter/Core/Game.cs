@@ -24,10 +24,12 @@ namespace SpaceShooter.Core {
 
 		public void PushScreen(Screen screen) {
 			screens.Push(screen);
+			screen.Load();
 		}
 
 		public void PopScreen() {
-			screens.Pop();
+			var screen = screens.Pop();
+			screen.Unload();
 		}
 
 		protected override void LoadContent() {

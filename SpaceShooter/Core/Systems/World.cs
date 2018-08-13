@@ -6,7 +6,7 @@ using SpaceShooter.Core.Entities;
 using SpaceShooter.Core.Events;
 
 namespace SpaceShooter.Core.Systems {
-	internal sealed class World {
+	internal sealed class World : BaseSystem {
 		private readonly List<Entity> newEntities = new List<Entity>();
 		private readonly List<Entity> entities = new List<Entity>();
 
@@ -20,7 +20,7 @@ namespace SpaceShooter.Core.Systems {
 			newEntities.Add(e.Entity);
 		}
 
-		public void Update(GameTime gameTime) {
+		public override void Update(GameTime gameTime) {
 			entities.AddRange(newEntities);
 			newEntities.Clear();
 			// complexity of O(n²), 
@@ -44,7 +44,7 @@ namespace SpaceShooter.Core.Systems {
 			entities.RemoveAll(e => e.IsDestroyed || e.IsOutOfBounds());
 		}
 
-		public void Draw(SpriteBatch spriteBatch) {
+		public override void Draw(SpriteBatch spriteBatch) {
 			foreach(var entity in entities) {
 				entity.Draw(spriteBatch);
 			}

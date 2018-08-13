@@ -4,9 +4,10 @@ using MonoGame.Extended;
 using SpaceShooter.Core.Entities;
 using SpaceShooter.Core.Events;
 using SpaceShooter.Utils;
+using SpaceShooter.Utils.External;
 
 namespace SpaceShooter.Core.Systems {
-	internal sealed class EnemyController {
+	internal sealed class EnemyController : BaseSystem {
 		private readonly CoroutineRunner runner = new CoroutineRunner();
 		private PlayerShip player;
 
@@ -15,7 +16,7 @@ namespace SpaceShooter.Core.Systems {
 			runner.Run(Spawner());
 		}
 
-		public void Update(GameTime gameTime) {
+		public override void Update(GameTime gameTime) {
 			runner.Update(gameTime.GetElapsedSeconds());
 		}
 
@@ -47,7 +48,7 @@ namespace SpaceShooter.Core.Systems {
 
 		private void OnSpawned(SpawnEvent e) {
 			if(e.Entity is PlayerShip ship) {
-				this.player = ship;
+				player = ship;
 			}
 		}
 

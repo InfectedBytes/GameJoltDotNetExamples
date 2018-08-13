@@ -24,16 +24,21 @@ SOFTWARE.
 
 */
 
+/* Modifications made by InfectedBytes:
+ * - changed code formatting a bit (resharper warnings and hints)
+ * - changed namespace
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SpaceShooter.Utils {
+namespace SpaceShooter.Utils.External {
 	/// <summary>
 	/// A container for running multiple routines in parallel. Coroutines can be nested.
 	/// </summary>
 	public class CoroutineRunner {
-		List<IEnumerator> running = new List<IEnumerator>();
-		List<float> delays = new List<float>();
+		readonly List<IEnumerator> running = new List<IEnumerator>();
+		readonly List<float> delays = new List<float>();
 
 		/// <summary>
 		/// Run a coroutine.
@@ -126,8 +131,8 @@ namespace SpaceShooter.Utils {
 		}
 
 		bool MoveNext(IEnumerator routine, int index) {
-			if(routine.Current is IEnumerator) {
-				if(MoveNext((IEnumerator)routine.Current, index))
+			if(routine.Current is IEnumerator enumerator) {
+				if(MoveNext(enumerator, index))
 					return true;
 
 				delays[index] = 0f;
@@ -135,8 +140,8 @@ namespace SpaceShooter.Utils {
 
 			bool result = routine.MoveNext();
 
-			if(routine.Current is float)
-				delays[index] = (float)routine.Current;
+			if(routine.Current is float f)
+				delays[index] = f;
 
 			return result;
 		}
@@ -144,9 +149,7 @@ namespace SpaceShooter.Utils {
 		/// <summary>
 		/// How many coroutines are currently running.
 		/// </summary>
-		public int Count {
-			get { return running.Count; }
-		}
+		public int Count => running.Count;
 	}
 
 	/// <summary>
@@ -194,8 +197,6 @@ namespace SpaceShooter.Utils {
 		/// <summary>
 		/// True if the enumerator is currently running.
 		/// </summary>
-		public bool IsRunning {
-			get { return Enumerator != null && Runner.IsRunning(Enumerator); }
-		}
+		public bool IsRunning => Enumerator != null && Runner.IsRunning(Enumerator);
 	}
 }

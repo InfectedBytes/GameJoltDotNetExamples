@@ -6,18 +6,31 @@ using SpaceShooter.Core.Events;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Systems {
-	internal sealed class GameController {
+	internal sealed class GameController : BaseSystem {
 		private const string GameoverText = "Gameover";
 		private const string ExitText = "Press ESC to exit";
 		public int Points { get; private set; }
-		private readonly Vector2 topLeft = new Vector2(-Consts.ScreenWidth / 2f, -Consts.ScreenHeight / 2f);
+		private readonly PlayerShip player;
+		private readonly Vector2 healthPosition;
+		private readonly Vector2 pointsPosition;
 		private readonly Vector2 gameoverPosition;
 		private readonly Vector2 exitTextPosition;
 		private bool gameover;
 
+		private Color HealthColor {
+			get {
+				if(player.Health >= player.MaxHealth * 3 / 4) return Color.Green;
+				if(player.Health > player.MaxHealth / 4) return Color.Yellow;
+				return Color.Red;
+			}
+		}
+
 		public GameController() {
 			EventBroker.Register<ShipDestroyedEvent>(OnDestroyed);
-			EventBroker.Dispatch(new SpawnEvent(new PlayerShip(), Vector2.Zero));
+			player = new PlayerShip();
+			EventBroker.Dispatch(new SpawnEvent(player, Vector2.Zero));
+			healthPosition = new Vector2(-Consts.ScreenWidth / 2f, -Consts.ScreenHeight / 2f);
+			pointsPosition = new Vector2(healthPosition.X, healthPosition.Y + 30);
 			var gameoverSize = Assets.FontHuge.MeasureString(GameoverText);
 			gameoverPosition = -gameoverSize / 2f;
 			var exitTextSize = Assets.FontMedium.MeasureString(ExitText);
@@ -32,14 +45,15 @@ namespace SpaceShooter.Core.Systems {
 			}
 		}
 
-		public void Update(GameTime gameTime) {
+		public override void Update(GameTime gameTime) {
 			if(gameover && Input.IsKeyJustPressed(Keys.Escape)) {
 				Game.Instance.PopScreen();
 			}
 		}
 
-		public void Draw(SpriteBatch spriteBatch) {
-			spriteBatch.DrawString(Assets.FontSmall, $"Points: {Points}", topLeft, Color.White);
+		public override void Draw(SpriteBatch spriteBatch) {
+			spriteBatch.DrawString(Assets.FontSmall, $"Health: {player.Health}", healthPosition, HealthColor);
+			spriteBatch.DrawString(Assets.FontSmall, $"Points: {Points}", pointsPosition, Color.White);
 			if(gameover) {
 				spriteBatch.DrawString(Assets.FontHuge, GameoverText, gameoverPosition, Color.White);
 				spriteBatch.DrawString(Assets.FontMedium, ExitText, exitTextPosition, Color.White);
