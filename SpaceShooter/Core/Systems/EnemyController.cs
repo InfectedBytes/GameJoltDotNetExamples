@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using SpaceShooter.Core.Entities;
@@ -7,11 +6,11 @@ using SpaceShooter.Core.Events;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Systems {
-	internal sealed class EnemyFactory {
+	internal sealed class EnemyController {
 		private readonly CoroutineRunner runner = new CoroutineRunner();
 		private PlayerShip player;
 
-		public EnemyFactory() {
+		public EnemyController() {
 			EventBroker.Register<SpawnEvent>(OnSpawned);
 			runner.Run(Spawner());
 		}
@@ -21,13 +20,14 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private IEnumerator Spawner() {
-			var viewport = Assets.GraphicsDevice.Viewport;
+			int width = Consts.ScreenWidth;
+			int height = Consts.ScreenHeight;
 			float enemyDelay = 1f;
 			const int enemiesPerWave = 20;
 			while(true) {
 				for(int i = 0; i < enemiesPerWave; i++) {
-					var x = Assets.Random.Next(-viewport.Width / 2, viewport.Width / 2);
-					var y = -viewport.Height / 2 - 100;
+					var x = Assets.Random.Next(-width / 2, width / 2);
+					var y = -height / 2 - 100;
 					var ship = new EnemyShip(2);
 					runner.Run(SimpleEnemy(ship));
 					runner.Run(ConstantFire(ship));
@@ -39,7 +39,7 @@ namespace SpaceShooter.Core.Systems {
 					var ship = new EnemyShip(7);
 					runner.Run(BossBehavior(ship));
 					runner.Run(ConstantFire(ship));
-					EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -viewport.Height / 2 - 100)));
+					EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -height / 2 - 100)));
 				}
 			}
 			// ReSharper disable once IteratorNeverReturns, intended behavior

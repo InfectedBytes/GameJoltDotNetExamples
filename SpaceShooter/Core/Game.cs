@@ -13,12 +13,13 @@ namespace SpaceShooter.Core {
 
 		public Game() {
 			var graphics = new GraphicsDeviceManager(this) {
-				PreferredBackBufferWidth = 1280,
-				PreferredBackBufferHeight = 720
+				PreferredBackBufferWidth = Consts.ScreenWidth,
+				PreferredBackBufferHeight = Consts.ScreenHeight
 			};
 			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
 			Instance = this;
+			Components.Add(new Input(this));
 		}
 
 		public void PushScreen(Screen screen) {
@@ -39,6 +40,7 @@ namespace SpaceShooter.Core {
 		}
 
 		protected override void Update(GameTime gameTime) {
+			base.Update(gameTime);
 			screens.Peek().Update(gameTime);
 		}
 

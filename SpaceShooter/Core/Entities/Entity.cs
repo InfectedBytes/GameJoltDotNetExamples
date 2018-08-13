@@ -45,8 +45,8 @@ namespace SpaceShooter.Core.Entities {
 		}
 
 		public bool IsOutOfBounds() {
-			var w = Assets.GraphicsDevice.Viewport.Width * 0.75f;
-			var h = Assets.GraphicsDevice.Viewport.Height * 0.75f;
+			var w = Consts.ScreenWidth * 0.75f;
+			var h = Consts.ScreenHeight * 0.75f;
 			return Position.X < -w || Position.X > w || Position.Y < -h || Position.Y > h;
 		}
 	}
