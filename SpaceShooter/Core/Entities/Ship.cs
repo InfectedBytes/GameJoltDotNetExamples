@@ -24,8 +24,6 @@ namespace SpaceShooter.Core.Entities {
 		}
 
 		public void Move(float dx, float dy) {
-			dx = MathHelper.Clamp(dx, -1f, 1f);
-			dy = MathHelper.Clamp(dy, -1f, 1f);
 			Velocity = new Vector2(dx * MaxSpeed, dy * MaxSpeed);
 		}
 

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Animations.SpriteSheets;
 using MonoGame.Extended.TextureAtlases;
-using SpaceShooter.Core;
 
 namespace SpaceShooter.Utils {
 	internal static class Assets {
@@ -17,9 +16,6 @@ namespace SpaceShooter.Utils {
 		public static SpriteFont FontSmall { get; private set; }
 		public static SpriteFont FontMedium { get; private set; }
 		public static SpriteFont FontHuge { get; private set; }
-
-		public static MissileDef DefaultMissile => new MissileDef("spaceMissiles_001", 1, 0.5f);
-		public static MissileDef DefaultEnemyMissile => new MissileDef("spaceMissiles_002", 1, 2f);
 
 		public static void Load(GraphicsDevice device, ContentManager content) {
 			GraphicsDevice = device;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using SpaceShooter.Core.Entities;
@@ -10,6 +11,8 @@ namespace SpaceShooter.Core.Systems {
 	internal sealed class EnemyController : BaseSystem {
 		private readonly CoroutineRunner runner = new CoroutineRunner();
 		private PlayerShip player;
+		private readonly MissileDef defaultMissile = new MissileDef("spaceMissiles_002", 1, 2f);
+		private readonly MissileDef bossMissile = new MissileDef("spaceMissiles_003", 3, 1f);
 
 		public EnemyController() {
 			EventBroker.Register<SpawnEvent>(OnSpawned);
@@ -20,27 +23,41 @@ namespace SpaceShooter.Core.Systems {
 			runner.Update(gameTime.GetElapsedSeconds());
 		}
 
+		#region Spawn Methods
+		private void SpawnWeakEnemy() {
+			var x = Assets.Random.Next(-Consts.ScreenWidth / 2, Consts.ScreenWidth / 2);
+			var y = -Consts.ScreenHeight / 2 - 100;
+			var ship = new EnemyShip(2, 1, defaultMissile);
+			runner.Run(SimpleEnemy(ship));
+			runner.Run(ConstantFire(ship));
+			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(x, y)));
+		}
+
+		private EnemyShip SpawnBoss() {
+			var ship = new EnemyShip(7, 5, bossMissile);
+			runner.Run(BossBehavior(ship));
+			runner.Run(ConstantFire(ship));
+			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -Consts.ScreenHeight / 2 - 100)));
+			return ship;
+		}
+		#endregion
+
+		private bool PlayerReached(EnemyShip ship) {
+			return Math.Abs(player.Position.X - ship.Position.X) < 20f;
+		}
+
 		private IEnumerator Spawner() {
-			int width = Consts.ScreenWidth;
-			int height = Consts.ScreenHeight;
 			float enemyDelay = 1f;
-			const int enemiesPerWave = 20;
+			const int enemiesPerWave = 10;
 			while(true) {
 				for(int i = 0; i < enemiesPerWave; i++) {
-					var x = Assets.Random.Next(-width / 2, width / 2);
-					var y = -height / 2 - 100;
-					var ship = new EnemyShip(2);
-					runner.Run(SimpleEnemy(ship));
-					runner.Run(ConstantFire(ship));
-					EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(x, y)));
+					SpawnWeakEnemy();
 					yield return enemyDelay;
 				}
 				yield return 2f;
-				{
-					var ship = new EnemyShip(7);
-					runner.Run(BossBehavior(ship));
-					runner.Run(ConstantFire(ship));
-					EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -height / 2 - 100)));
+				var boss = SpawnBoss();
+				while(!boss.IsDestroyed) {
+					yield return null;
 				}
 			}
 			// ReSharper disable once IteratorNeverReturns, intended behavior
@@ -78,19 +95,21 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private IEnumerator BossBehavior(EnemyShip enemy) {
-			enemy.Move(0, 1);
-			while(!enemy.IsDestroyed && enemy.Position.Y < 0)
+			enemy.Move(0, 2); // we intentionally ignore the MaxSpeed by applying a factor of 2
+			while(!enemy.IsDestroyed && enemy.Position.Y < -100)
 				yield return null;
 			enemy.Move(0, 0);
 			while(!enemy.IsDestroyed) {
-				while(enemy.Position.X < player.Position.X) {
+				while(enemy.Position.X < player.Position.X && !PlayerReached(enemy)) {
 					enemy.Move(1, 0);
 					yield return null;
 				}
-				while(enemy.Position.X > player.Position.X) {
+				while(enemy.Position.X > player.Position.X && !PlayerReached(enemy)) {
 					enemy.Move(-1, 0);
 					yield return null;
 				}
+				enemy.Move(0, 0);
+				yield return null;
 			}
 		}
 	}
