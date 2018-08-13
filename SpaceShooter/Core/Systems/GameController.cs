@@ -16,7 +16,7 @@ namespace SpaceShooter.Core.Systems {
 		private readonly Vector2 topLeft;
 		private readonly Vector2 gameoverPosition;
 		private readonly Vector2 exitTextPosition;
-		private Score highscore;
+		private Score userHighscore, globalHighscore;
 		private bool gameover;
 		private bool hasTrophyAchieved;
 		private int waveCount;
@@ -31,8 +31,14 @@ namespace SpaceShooter.Core.Systems {
 			gameoverPosition = -gameoverSize / 2f;
 			var exitTextSize = Assets.FontMedium.MeasureString(ExitText);
 			exitTextPosition = new Vector2(-exitTextSize.X / 2f, gameoverSize.Y / 2f + 20);
+			// we want to get the best score of the signed in player,
+			// therefore we have to provide the user's credentials as the first argument
 			Game.Jolt.Scores.Fetch(Game.User, callback: response => {
-				if(response.Success) highscore = response.Data.FirstOrDefault();
+				if(response.Success) userHighscore = response.Data.FirstOrDefault();
+			});
+			// we also want to get the globally best score
+			Game.Jolt.Scores.Fetch(callback: response => {
+				if(response.Success) globalHighscore = response.Data.FirstOrDefault();
 			});
 			Game.Jolt.Trophies.Fetch(Game.User, ids: new[] {Game.Settings.FirstBossTrophy}, callback: response => {
 				if(response.Success) hasTrophyAchieved = response.Data.First().Achieved;
@@ -64,11 +70,13 @@ namespace SpaceShooter.Core.Systems {
 		public override void Draw(SpriteBatch spriteBatch) {
 			if(message != null)
 				spriteBatch.DrawString(Assets.FontSmall, message, new Vector2(0, -Consts.ScreenHeight / 2f), Color.White);
-			var highscoreText = highscore != null ? highscore.Text : "-";
+			var userScoreText = userHighscore != null ? userHighscore.Text : "-";
+			var globalScoreText = globalHighscore != null ? $"{globalHighscore.Text} ({globalHighscore.UserName})" : "-";
 			spriteBatch.DrawString(Assets.FontSmall,
 $@"Health: {player.Health}
 Points: {Points}
-Highscore: {highscoreText}", topLeft, Color.White);
+Your highscore: {userScoreText}
+Global highscore: {globalScoreText}", topLeft, Color.White);
 			if(gameover) {
 				spriteBatch.DrawString(Assets.FontHuge, GameoverText, gameoverPosition, Color.White);
 				spriteBatch.DrawString(Assets.FontMedium, ExitText, exitTextPosition, Color.White);
