@@ -19,6 +19,10 @@ namespace SpaceShooter.Core.Screens {
 			Starfield.LoadContent();
 		}
 
+		public virtual void Show() { }
+
+		public virtual void Hide() { }
+
 		public virtual void Load() { }
 
 		public virtual void Unload() {

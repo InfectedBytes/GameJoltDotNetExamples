@@ -1,15 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
+﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.TextureAtlases;
 using SpaceShooter.Utils;
-using SpaceShooter.Utils.External;
 using SpaceShooter.Utils.External.MonoGameTextbox;
 
 namespace SpaceShooter.Core.Screens {
 	internal sealed class LoginScreen : Screen {
-		private readonly TextureRegion2D cursor;
+		private readonly TextureRegion2D cursor = Assets.Sprites["spaceMissiles_001"];
 		private readonly LabeledTextbox username, token;
 		private readonly SimpleButton loginButton;
 		private readonly Label message;
@@ -17,8 +13,7 @@ namespace SpaceShooter.Core.Screens {
 
 		public LoginScreen() {
 			KeyboardInput.Initialize(Game.Instance, 500f, 20);
-
-			cursor = Assets.Sprites["spaceMissiles_001"];
+			
 			var size = new Point(300, 40);
 			username = new LabeledTextbox(Assets.FontSmall, "Username:", new Point(0, -50), size);
 			token = new LabeledTextbox(Assets.FontSmall, "Token:", new Point(0, 0), size);
@@ -40,7 +35,8 @@ namespace SpaceShooter.Core.Screens {
 					message.Text = response.Message;
 				} else {
 					message.Text = null;
-					Game.Instance.PushScreen(new GameScreen());
+					Game.User = response.Data;
+					Game.Instance.PushScreen(new MenuScreen());
 				}
 			});
 		}

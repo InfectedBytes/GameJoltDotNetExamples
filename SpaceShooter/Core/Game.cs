@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using GameJolt;
+using GameJolt.Objects;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using SpaceShooter.Core.Screens;
@@ -16,6 +17,7 @@ namespace SpaceShooter.Core {
 		public static Settings Settings { get; private set; }
 		public static Game Instance { get; private set; }
 		public static GameJoltApi Jolt { get; private set; }
+		public static Credentials User { get; set; }
 
 		private readonly Stack<Screen> screens = new Stack<Screen>();
 
@@ -37,13 +39,17 @@ namespace SpaceShooter.Core {
 		}
 
 		public void PushScreen(Screen screen) {
+			if(screens.Count > 0) screens.Peek().Hide();
 			screens.Push(screen);
 			screen.Load();
+			screen.Show();
 		}
 
 		public void PopScreen() {
 			var screen = screens.Pop();
+			screen.Hide();
 			screen.Unload();
+			if(screens.Count > 0) screens.Peek().Show();
 		}
 
 		protected override void LoadContent() {

@@ -45,6 +45,7 @@
     <Compile Include="Core\Screens\ErrorScreen.cs" />
     <Compile Include="Core\Screens\GameScreen.cs" />
     <Compile Include="Core\Screens\LoginScreen.cs" />
+    <Compile Include="Core\Screens\MenuScreen.cs" />
     <Compile Include="Core\Screens\Screen.cs" />
     <Compile Include="Core\Systems\EnemyController.cs" />
     <Compile Include="Core\Entities\EnemyShip.cs" />
