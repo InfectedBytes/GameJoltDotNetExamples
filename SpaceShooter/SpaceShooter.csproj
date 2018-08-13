@@ -42,7 +42,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\Screens\ErrorScreen.cs" />
     <Compile Include="Core\Screens\GameScreen.cs" />
+    <Compile Include="Core\Screens\LoginScreen.cs" />
     <Compile Include="Core\Screens\Screen.cs" />
     <Compile Include="Core\Systems\EnemyController.cs" />
     <Compile Include="Core\Entities\EnemyShip.cs" />
@@ -67,18 +69,28 @@
     <Compile Include="Utils\Consts.cs" />
     <Compile Include="Utils\External\Coroutines.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\Cursor.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\Extensions.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\KeyboardInput.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\Text.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\TextBox.cs" />
+    <Compile Include="Utils\External\MonoGameTextbox\TextRenderer.cs" />
     <Compile Include="Utils\Input.cs" />
     <Compile Include="Utils\External\Starfield.cs" />
+    <Compile Include="Utils\Label.cs" />
+    <Compile Include="Utils\LabeledTextbox.cs" />
+    <Compile Include="Utils\Settings.cs" />
+    <Compile Include="Utils\SimpleButton.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="GameJolt, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GameJoltDotNet.0.2.0\lib\net45\GameJolt.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.1.1.0\lib\portable-net45+win8+wpa81\MonoGame.Extended.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Extended.Animations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.Animations.1.1.0\lib\portable-net45+win8+wpa81\MonoGame.Extended.Animations.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Extended.Gui, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoGame.Extended.Gui.1.1.0\lib\portable-net45+win8+wpa81\MonoGame.Extended.Gui.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Extended.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.Input.1.1.0\lib\portable-net45+win8+wpa81\MonoGame.Extended.Input.dll</HintPath>
@@ -90,6 +102,7 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +156,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <EmbeddedResource Include="Core\Settings.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
