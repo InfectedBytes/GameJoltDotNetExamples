@@ -1,5 +1,8 @@
-﻿namespace SpaceShooter.Core.Entities {
+﻿using Microsoft.Xna.Framework;
+
+namespace SpaceShooter.Core.Entities {
 	internal sealed class EnemyShip : Ship {
-		public EnemyShip(int shipId, int health, MissileDef missileDef) : base(shipId, health, missileDef, Team.Enemy) { }
+		public EnemyShip(int shipId, int health, MissileDef missileDef, params Vector2[] missileSpawns) : 
+			base(shipId, health, missileDef, missileSpawns, Team.Enemy) { }
 	}
 }

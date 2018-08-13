@@ -7,7 +7,8 @@ namespace SpaceShooter.Core.Entities {
 	internal sealed class PlayerShip : Ship {
 		private readonly Rectangle bounds;
 
-		public PlayerShip() : base(1, 20, new MissileDef("spaceMissiles_001", 1, 0.5f), Team.Player) {
+		public PlayerShip() : base(1, 20, new MissileDef("spaceMissiles_001", 1, 0.5f),
+			new[] {new Vector2(0, -10)}, Team.Player) {
 			MaxSpeed += 100; // player is a bit faster than enemies
 			Region = Assets.Sprites["spaceShips_001"];
 			var w = Consts.ScreenWidth;

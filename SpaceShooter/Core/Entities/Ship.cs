@@ -11,8 +11,11 @@ namespace SpaceShooter.Core.Entities {
 		public float MaxSpeed { get; protected set; } = 250f;
 		public MissileDef CurrentMissile { get; private set; }
 		private float cooldown;
+		private readonly Vector2[] missileSpawns;
 
-		protected Ship(int shipId, int health, MissileDef missileDef, Team team = Team.None) : base(team) {
+		protected Ship(int shipId, int health, MissileDef missileDef, Vector2[] missileSpawns, Team team = Team.None) :
+			base(team) {
+			this.missileSpawns = missileSpawns;
 			Region = Assets.Sprites[$"spaceShips_{shipId:D3}"];
 			MaxHealth = Health = health;
 			ChangeMissile(missileDef);
@@ -55,7 +58,8 @@ namespace SpaceShooter.Core.Entities {
 		public void Fire() {
 			if(cooldown > 0) return;
 			cooldown = CurrentMissile.Cooldown;
-			EventBroker.Dispatch(new SpawnEvent(new Missile(CurrentMissile, Team), Position));
+			var pos = Position + missileSpawns[Assets.Random.Next(0, missileSpawns.Length)];
+			EventBroker.Dispatch(new SpawnEvent(new Missile(CurrentMissile, Team), pos));
 		}
 
 		public override void OnCollide(Entity other) {

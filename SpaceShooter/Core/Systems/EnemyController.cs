@@ -12,6 +12,7 @@ namespace SpaceShooter.Core.Systems {
 		private readonly CoroutineRunner runner = new CoroutineRunner();
 		private PlayerShip player;
 		private readonly MissileDef defaultMissile = new MissileDef("spaceMissiles_002", 1, 2f);
+		private readonly MissileDef fastMissile = new MissileDef("spaceMissiles_004", 2, 1f, 600);
 		private readonly MissileDef bossMissile = new MissileDef("spaceMissiles_003", 3, 1f);
 
 		public EnemyController() {
@@ -27,14 +28,23 @@ namespace SpaceShooter.Core.Systems {
 		private void SpawnWeakEnemy() {
 			var x = Assets.Random.Next(-Consts.ScreenWidth / 2, Consts.ScreenWidth / 2);
 			var y = -Consts.ScreenHeight / 2 - 100;
-			var ship = new EnemyShip(2, 1, defaultMissile);
+			var ship = new EnemyShip(2, 1, defaultMissile, new Vector2(0, 20));
+			runner.Run(SimpleEnemy(ship));
+			runner.Run(ConstantFire(ship));
+			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(x, y)));
+		}
+
+		private void SpawnStrongEnemy() {
+			var x = Assets.Random.Next(-Consts.ScreenWidth / 2, Consts.ScreenWidth / 2);
+			var y = -Consts.ScreenHeight / 2 - 100;
+			var ship = new EnemyShip(3, 3, fastMissile, new Vector2(0, 20));
 			runner.Run(SimpleEnemy(ship));
 			runner.Run(ConstantFire(ship));
 			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(x, y)));
 		}
 
 		private EnemyShip SpawnBoss() {
-			var ship = new EnemyShip(7, 5, bossMissile);
+			var ship = new EnemyShip(7, 7, bossMissile, new Vector2(-25, 35), new Vector2(25, 35));
 			runner.Run(BossBehavior(ship));
 			runner.Run(ConstantFire(ship));
 			EventBroker.Dispatch(new SpawnEvent(ship, new Vector2(0, -Consts.ScreenHeight / 2 - 100)));
@@ -48,10 +58,14 @@ namespace SpaceShooter.Core.Systems {
 
 		private IEnumerator Spawner() {
 			float enemyDelay = 1f;
+			float strongEnemyProbability = 0;
 			const int enemiesPerWave = 10;
 			while(true) {
 				for(int i = 0; i < enemiesPerWave; i++) {
-					SpawnWeakEnemy();
+					if(Assets.Random.NextSingle() < strongEnemyProbability)
+						SpawnStrongEnemy();
+					else
+						SpawnWeakEnemy();
 					yield return enemyDelay;
 				}
 				yield return 2f;
@@ -59,6 +73,9 @@ namespace SpaceShooter.Core.Systems {
 				while(!boss.IsDestroyed) {
 					yield return null;
 				}
+				// after each wave, we increase the number of enemies and increase the strong enemy probability
+				enemyDelay *= 0.9f;
+				strongEnemyProbability += 0.1f;
 			}
 			// ReSharper disable once IteratorNeverReturns, intended behavior
 		}

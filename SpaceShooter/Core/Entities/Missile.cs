@@ -5,7 +5,6 @@ using SpaceShooter.Core.Events;
 
 namespace SpaceShooter.Core.Entities {
 	internal sealed class Missile : Entity {
-		private const float Speed = 500f;
 		private readonly MissileDef missileDef;
 
 		public Missile(MissileDef missileDef, Team team) : base(team) {
@@ -13,10 +12,10 @@ namespace SpaceShooter.Core.Entities {
 			Region = missileDef.Texture;
 			switch(team) {
 				case Team.Player:
-					Velocity = new Vector2(0, -Speed);
+					Velocity = new Vector2(0, -missileDef.Speed);
 					break;
 				case Team.Enemy:
-					Velocity = new Vector2(0, Speed);
+					Velocity = new Vector2(0, missileDef.Speed);
 					Effects = SpriteEffects.FlipVertically;
 					break;
 				default:
