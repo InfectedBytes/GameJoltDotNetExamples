@@ -1,5 +1,6 @@
 ﻿{
-  "GameId": 0,
-  "PrivateKey": "",
-  "FirstBossTrophy": 0 
+  "GameId": 0, /* must not be 0 */
+  "PrivateKey": "", /* must not be empty */
+  "FirstBossTrophy": 0, /* The trophy id for the "first boss killed" trophy, must not be 0 */
+  "Scoreboard": 0 /* Optional scoreboard id. The default scoreboard will be used if this is 0 */
 }

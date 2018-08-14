@@ -15,6 +15,11 @@
 		/// For this example project we need a trophy for the first boss.
 		/// </summary>
 		public int FirstBossTrophy { get; set; }
+		/// <summary>
+		/// The scoreboard which should be used in this example.
+		/// The default scoreboard will be used if this value is 0.
+		/// </summary>
+		public int Scoreboard { get; set; }
 
 		public bool IsValid() {
 			return GameId != 0 && !string.IsNullOrEmpty(PrivateKey) && FirstBossTrophy != 0;

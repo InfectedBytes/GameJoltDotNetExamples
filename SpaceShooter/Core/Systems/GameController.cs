@@ -40,11 +40,11 @@ namespace SpaceShooter.Core.Systems {
 			\****************************/
 			// we want to get the best score of the signed in player,
 			// therefore we have to provide the user's credentials as the first argument
-			Game.Jolt.Scores.Fetch(Game.User, callback: response => {
+			Game.Jolt.Scores.Fetch(Game.User, tableId: Game.Settings.Scoreboard, callback: response => {
 				if(response.Success) userHighscore = response.Data.FirstOrDefault();
 			});
 			// we also want to get the globally best score
-			Game.Jolt.Scores.Fetch(callback: response => {
+			Game.Jolt.Scores.Fetch(tableId: Game.Settings.Scoreboard, callback: response => {
 				if(response.Success) globalHighscore = response.Data.FirstOrDefault();
 			});
 			// we want to know if the user already has the "first boss"-trophy achieved
@@ -67,7 +67,7 @@ namespace SpaceShooter.Core.Systems {
 			} else if(e.Ship is PlayerShip) {
 				gameover = true;
 				// we died, so we can upload our new score.
-				Game.Jolt.Scores.Add(Game.User, Points, $"{Points}P");
+				Game.Jolt.Scores.Add(Game.User, Points, $"{Points}P", tableId: Game.Settings.Scoreboard);
 			}
 		}
 

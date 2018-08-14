@@ -25,7 +25,7 @@ namespace SpaceShooter.Core.Screens {
 			scores.Clear();
 			scores.Add(new Label(".:Scores:.", scorePos));
 			// fetch the top 10 scores
-			Game.Jolt.Scores.Fetch(callback: response => {
+			Game.Jolt.Scores.Fetch(tableId: Game.Settings.Scoreboard, callback: response => {
 				if(!response.Success) return; // error
 				// iterate over the received scores and store the username and score to a label
 				foreach(var score in response.Data) {
