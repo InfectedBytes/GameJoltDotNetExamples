@@ -8,6 +8,10 @@ using SpaceShooter.Utils;
 using SpaceShooter.Utils.External;
 
 namespace SpaceShooter.Core.Systems {
+	/// <summary>
+	/// Controller class which is responsible for spawning new enemies and their behavior.
+	/// The enemy behavior is achieved by coroutines.
+	/// </summary>
 	internal sealed class EnemyController : BaseSystem {
 		public const int BossId = 7;
 
@@ -59,10 +63,12 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private IEnumerator Spawner() {
-			float enemyDelay = 1f;
-			float strongEnemyProbability = 0;
+			// this coroutine manages the spawning of the enemies.
+			float enemyDelay = 1f; // with each wave, the enemies will spawn faster
+			float strongEnemyProbability = 0; // with each wave, it gets more likely to spawn a stronger enemy
 			const int enemiesPerWave = 10;
 			while(true) {
+				// first spawn the enemy waves
 				for(int i = 0; i < enemiesPerWave; i++) {
 					if(Assets.Random.NextSingle() < strongEnemyProbability)
 						SpawnStrongEnemy();
@@ -71,6 +77,7 @@ namespace SpaceShooter.Core.Systems {
 					yield return enemyDelay;
 				}
 				yield return 2f;
+				// spawn boss and wait until he's dead
 				var boss = SpawnBoss();
 				while(!boss.IsDestroyed) {
 					yield return null;
@@ -88,10 +95,11 @@ namespace SpaceShooter.Core.Systems {
 			}
 		}
 
+		#region Enemy Behaviors
 		private IEnumerator SimpleEnemy(EnemyShip enemy) {
-			var viewport = Assets.GraphicsDevice.Viewport;
-			float left = -viewport.Width / 2f + 20f;
-			float right = viewport.Width / 2f - 20f;
+			// this behavior will just move from left to right and back again.
+			float left = -Consts.ScreenWidth / 2f + 20f;
+			float right = Consts.ScreenWidth / 2f - 20f;
 			float vx = Assets.Random.NextSingle(0.75f, 1f);
 			float vy = Assets.Random.NextSingle(0.25f, 0.5f);
 			while(!enemy.IsDestroyed) {
@@ -107,6 +115,8 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private IEnumerator ConstantFire(EnemyShip enemy) {
+			// this behavior is used to fire always.
+			// the firerate is limited by the missiles cooldown
 			while(!enemy.IsDestroyed) {
 				enemy.Fire();
 				yield return null;
@@ -114,6 +124,8 @@ namespace SpaceShooter.Core.Systems {
 		}
 
 		private IEnumerator BossBehavior(EnemyShip enemy) {
+			// this behavior will first move downwards to the center of the screen
+			// and then it will follow the player
 			enemy.Move(0, 2); // we intentionally ignore the MaxSpeed by applying a factor of 2
 			while(!enemy.IsDestroyed && enemy.Position.Y < -100)
 				yield return null;
@@ -131,5 +143,6 @@ namespace SpaceShooter.Core.Systems {
 				yield return null;
 			}
 		}
+		#endregion
 	}
 }

@@ -4,6 +4,9 @@ using MonoGame.Extended;
 using SpaceShooter.Utils.External.MonoGameTextbox;
 
 namespace SpaceShooter.Utils {
+	/// <summary>
+	/// Gui element with a label and a textbox.
+	/// </summary>
 	internal sealed class LabeledTextbox {
 		private readonly SpriteFont font;
 		private readonly string text;

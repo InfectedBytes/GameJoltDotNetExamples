@@ -5,6 +5,10 @@ using MonoGame.Extended.Animations.SpriteSheets;
 using MonoGame.Extended.TextureAtlases;
 
 namespace SpaceShooter.Utils {
+	/// <summary>
+	/// Static assets for easy access. 
+	/// (Be aware that this approach should not be used for larger projects.)
+	/// </summary>
 	internal static class Assets {
 		public static Random Random { get; } = new Random();
 

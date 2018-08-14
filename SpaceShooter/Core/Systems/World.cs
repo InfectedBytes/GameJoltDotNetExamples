@@ -6,6 +6,9 @@ using SpaceShooter.Core.Entities;
 using SpaceShooter.Core.Events;
 
 namespace SpaceShooter.Core.Systems {
+	/// <summary>
+	/// Manages all entities in the game.
+	/// </summary>
 	internal sealed class World : BaseSystem {
 		private readonly List<Entity> newEntities = new List<Entity>();
 		private readonly List<Entity> entities = new List<Entity>();
@@ -15,12 +18,15 @@ namespace SpaceShooter.Core.Systems {
 		public World() {
 			EventBroker.Register<SpawnEvent>(Spawn);
 		}
-
+		
 		private void Spawn(SpawnEvent e) {
+			// a SpawnEvent was dispatched by the EventBroker
+			// we do not add the new entity immediately, but instead at the start of the next frame.
 			newEntities.Add(e.Entity);
 		}
 
 		public override void Update(GameTime gameTime) {
+			// add pending entities
 			entities.AddRange(newEntities);
 			newEntities.Clear();
 			// complexity of O(n²), 

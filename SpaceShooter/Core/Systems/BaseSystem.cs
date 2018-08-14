@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceShooter.Core.Systems {
+	/// <summary>
+	/// Basic gameplay system.
+	/// </summary>
 	internal abstract class BaseSystem {
 		public virtual void Load() { }
 		public virtual void Unload() { }

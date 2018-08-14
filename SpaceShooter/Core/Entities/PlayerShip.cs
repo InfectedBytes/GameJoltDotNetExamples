@@ -5,12 +5,11 @@ using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Entities {
 	internal sealed class PlayerShip : Ship {
-		private readonly Rectangle bounds;
+		private readonly Rectangle bounds; // the region where the player can move
 
 		public PlayerShip() : base(1, 20, new MissileDef("spaceMissiles_001", 1, 0.5f),
 			new[] {new Vector2(0, -10)}, Team.Player) {
 			MaxSpeed += 100; // player is a bit faster than enemies
-			Region = Assets.Sprites["spaceShips_001"];
 			var w = Consts.ScreenWidth;
 			var h = Consts.ScreenHeight;
 			// the player shall be able to move inside of the lower half of the viewport

@@ -24,14 +24,14 @@ namespace SpaceShooter.Core.Entities {
 		}
 
 		public override void OnCollide(Entity other) {
+			// ignore entities from the same team
 			if(Team != other.Team) {
 				if(other is Ship ship) {
 					ship.Damage(Team, missileDef.Damage);
 					EventBroker.Dispatch(new SpawnEvent(new Explosion(), Position));
 					Destroy();
-				} else if(other is Missile missile) {
+				} else if(other is Missile) {
 					Destroy();
-					missile.Destroy();
 					EventBroker.Dispatch(new SpawnEvent(new Explosion(), Position));
 				}
 			}

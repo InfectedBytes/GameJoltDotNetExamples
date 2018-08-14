@@ -1,9 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.TextureAtlases;
 using SpaceShooter.Utils;
 using SpaceShooter.Utils.External.MonoGameTextbox;
 
 namespace SpaceShooter.Core.Screens {
+	/// <summary>
+	/// First screen shown to the player. The player has to sign in into GameJolt to continue.
+	/// </summary>
 	internal sealed class LoginScreen : Screen {
 		private readonly TextureRegion2D cursor = Assets.Sprites["spaceMissiles_001"];
 		private readonly LabeledTextbox username, token;
@@ -22,21 +26,28 @@ namespace SpaceShooter.Core.Screens {
 			username.Active = true;
 		}
 
+		/// <summary>
+		/// Called when the login button is clicked.
+		/// </summary>
 		private void OnClick() {
 			if(string.IsNullOrEmpty(username.Text) || string.IsNullOrEmpty(token.Text)) {
 				message.Text = "Username/token must not be empty";
 				return;
 			}
-			requestInProgress = true;
+			requestInProgress = true; // block ui until the callback is called
 			message.Text = "Logging in ...";
+			/****************************\
+			|* GameJoltDotNet API usage *|
+			\****************************/
+			// try to login
 			Game.Jolt.Users.Auth(username.Text, token.Text, response => {
-				requestInProgress = false;
+				requestInProgress = false; // unblock ui
 				if(!response.Success) {
-					message.Text = response.Message;
+					message.Text = response.Message; // error message
 				} else {
 					message.Text = null;
-					Game.User = response.Data;
-					Game.Instance.PushScreen(new MenuScreen());
+					Game.User = response.Data; // store the user's credentials object
+					Game.Instance.PushScreen(new MenuScreen()); // add menu screen
 				}
 			});
 		}
@@ -50,6 +61,14 @@ namespace SpaceShooter.Core.Screens {
 		public override void Update(GameTime gameTime) {
 			base.Update(gameTime);
 			if(requestInProgress) return;
+			if(Input.IsKeyJustReleased(Keys.Enter) || Input.IsKeyJustReleased(Keys.Tab)) {
+				if(username.Active) { // select next textbox
+					username.Active = false;
+					token.Active = true;
+				} else { // login
+					OnClick();
+				}
+			}
 			if(Input.IsLeftMouseJustReleased()) {
 				if(username.Contains(Input.MousePos)) {
 					username.Active = true;

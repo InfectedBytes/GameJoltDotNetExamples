@@ -11,12 +11,24 @@ using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core {
 	/// <summary>
-	/// This is the main type for your game.
+	/// This is the main entry point for the game, managing a stack of screens (like menu and gamescreen)
 	/// </summary>
 	internal class Game : Microsoft.Xna.Framework.Game {
+		/// <summary>
+		/// GameJolt settings containing things like GameId and TrophyId.
+		/// </summary>
 		public static Settings Settings { get; private set; }
+		/// <summary>
+		/// Singleton instance used to push/pop screens.
+		/// </summary>
 		public static Game Instance { get; private set; }
+		/// <summary>
+		/// GameJoltApi singleton used to sent requests.
+		/// </summary>
 		public static GameJoltApi Jolt { get; private set; }
+		/// <summary>
+		/// Signed in user.
+		/// </summary>
 		public static Credentials User { get; set; }
 
 		private readonly Stack<Screen> screens = new Stack<Screen>();
@@ -72,7 +84,6 @@ namespace SpaceShooter.Core {
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			//GraphicsDevice.Clear(Color.CornflowerBlue);
 			screens.Peek().Draw(gameTime);
 		}
 	}

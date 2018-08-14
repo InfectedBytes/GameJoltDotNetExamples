@@ -5,6 +5,9 @@ using SpaceShooter.Core.Events;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Entities {
+	/// <summary>
+	/// Base class for ships. Contains shared logic for shooting and damage.
+	/// </summary>
 	internal abstract class Ship : Entity {
 		public int ShipId { get; }
 		public int MaxHealth { get;}

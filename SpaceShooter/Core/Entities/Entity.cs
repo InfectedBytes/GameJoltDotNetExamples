@@ -6,6 +6,9 @@ using MonoGame.Extended.TextureAtlases;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Entities {
+	/// <summary>
+	/// Base class for all visible entities.
+	/// </summary>
 	internal abstract class Entity {
 		public Team Team { get; }
 		public TextureRegion2D Region { get; set; }

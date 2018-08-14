@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 
 namespace SpaceShooter.Core.Events {
+	/// <summary>
+	/// Simple event dispatching system used to decouple system.
+	/// </summary>
 	internal static class EventBroker {
 		private static readonly Dictionary<Type, List<Subscriber>> Subscriptions = new Dictionary<Type, List<Subscriber>>();
 

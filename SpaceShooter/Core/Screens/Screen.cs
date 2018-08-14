@@ -5,6 +5,9 @@ using SpaceShooter.Utils;
 using SpaceShooter.Utils.External;
 
 namespace SpaceShooter.Core.Screens {
+	/// <summary>
+	/// Base class for all screens. This class already provides a scrolling background.
+	/// </summary>
 	internal abstract class Screen {
 		protected SpriteBatch SpriteBatch { get; }
 		protected Starfield Starfield { get; }

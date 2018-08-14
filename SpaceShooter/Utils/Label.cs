@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceShooter.Utils {
+	/// <summary>
+	/// Simple label element which is automatically sized to fit the given text.
+	/// </summary>
 	internal sealed class Label {
 		public string Text { get; set; }
 		private readonly Vector2 center;

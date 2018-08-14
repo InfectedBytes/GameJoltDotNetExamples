@@ -8,6 +8,10 @@ using SpaceShooter.Core.Events;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Systems {
+	/// <summary>
+	/// GameController managing the overall gamestate (for e.g. gameover) and 
+	/// manages the ingame GameJolt requests.
+	/// </summary>
 	internal sealed class GameController : BaseSystem {
 		private const string GameoverText = "Gameover";
 		private const string ExitText = "Press ESC to exit";
@@ -31,6 +35,9 @@ namespace SpaceShooter.Core.Systems {
 			gameoverPosition = -gameoverSize / 2f;
 			var exitTextSize = Assets.FontMedium.MeasureString(ExitText);
 			exitTextPosition = new Vector2(-exitTextSize.X / 2f, gameoverSize.Y / 2f + 20);
+			/****************************\
+			|* GameJoltDotNet API usage *|
+			\****************************/
 			// we want to get the best score of the signed in player,
 			// therefore we have to provide the user's credentials as the first argument
 			Game.Jolt.Scores.Fetch(Game.User, callback: response => {
@@ -40,6 +47,7 @@ namespace SpaceShooter.Core.Systems {
 			Game.Jolt.Scores.Fetch(callback: response => {
 				if(response.Success) globalHighscore = response.Data.FirstOrDefault();
 			});
+			// we want to know if the user already has the "first boss"-trophy achieved
 			Game.Jolt.Trophies.Fetch(Game.User, ids: new[] {Game.Settings.FirstBossTrophy}, callback: response => {
 				if(response.Success) hasTrophyAchieved = response.Data.First().Achieved;
 			});
@@ -50,6 +58,7 @@ namespace SpaceShooter.Core.Systems {
 				Points += enemy.MaxHealth; // we just use the max health of the enemy as his "value"
 				if(enemy.ShipId == EnemyController.BossId) {
 					if(waveCount == 0 && !hasTrophyAchieved) {
+						// we have killed our first boss and we don't already have the achievement
 						Game.Jolt.Trophies.SetAchieved(Game.User, Game.Settings.FirstBossTrophy);
 						message = "Unlocked trophy!";
 					}
@@ -57,6 +66,7 @@ namespace SpaceShooter.Core.Systems {
 				}
 			} else if(e.Ship is PlayerShip) {
 				gameover = true;
+				// we died, so we can upload our new score.
 				Game.Jolt.Scores.Add(Game.User, Points, $"{Points}P");
 			}
 		}
@@ -74,7 +84,7 @@ namespace SpaceShooter.Core.Systems {
 			var globalScoreText = globalHighscore != null ? $"{globalHighscore.Text} ({globalHighscore.UserName})" : "-";
 			spriteBatch.DrawString(Assets.FontSmall,
 $@"Health: {player.Health}
-Points: {Points}
+Points: {Points}P
 Your highscore: {userScoreText}
 Global highscore: {globalScoreText}", topLeft, Color.White);
 			if(gameover) {

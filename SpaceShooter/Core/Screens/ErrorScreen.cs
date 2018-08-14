@@ -3,6 +3,11 @@ using Microsoft.Xna.Framework;
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core.Screens {
+	/// <summary>
+	/// This screen is only shown if you start this game without specifying your 
+	/// game's GameJolt credentials.
+	/// Edit the SpaceShooter/Core/Settings.json file.
+	/// </summary>
 	internal sealed class ErrorScreen : Screen {
 		private readonly List<Label> messages = new List<Label>();
 

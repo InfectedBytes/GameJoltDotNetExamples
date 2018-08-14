@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Input;
 
 namespace SpaceShooter.Utils {
+	/// <summary>
+	/// Static input wrapper used to simplify the input handling.
+	/// </summary>
 	internal sealed class Input : GameComponent {
 		private static KeyboardState lastKeyboardState;
 		private static KeyboardState currentKeyboardState;

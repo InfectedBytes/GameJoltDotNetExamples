@@ -2,6 +2,9 @@
 using SpaceShooter.Utils;
 
 namespace SpaceShooter.Core {
+	/// <summary>
+	/// Basic settings for missile.
+	/// </summary>
 	internal sealed class MissileDef {
 		public TextureRegion2D Texture { get; }
 		public int Damage { get; }

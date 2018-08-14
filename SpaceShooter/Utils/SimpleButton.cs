@@ -5,6 +5,9 @@ using MonoGame.Extended;
 // ReSharper disable ImpureMethodCallOnReadonlyValueField
 
 namespace SpaceShooter.Utils {
+	/// <summary>
+	/// Simple button with a hover effect.
+	/// </summary>
 	internal sealed class SimpleButton {
 		private readonly Color backgroundColor = Color.DarkBlue;
 		private readonly Color defaultTextColor = Color.White;
